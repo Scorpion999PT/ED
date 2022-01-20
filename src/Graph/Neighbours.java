@@ -8,6 +8,7 @@ package Graph;
 /**
  *
  * @author renat
+ * Vizinhos
  */
 public class Neighbours {  
     Node node;
