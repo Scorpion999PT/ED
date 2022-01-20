@@ -60,6 +60,7 @@ public class Main {
         
         Iterator<Node<String>> lista = graph.getShortPath(nodeA, nodeE);
         
+        //Imprime o resultado
         while (lista.hasNext()) {
             System.out.println(lista.next().getKey());
         }
