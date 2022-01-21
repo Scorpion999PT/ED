@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rumoaorecurso;
+package Import_Export;
 
 /**
  *
  * @author renat
  */
-public class Main {
+public class Import {
 
     /**
      * @param args the command line arguments

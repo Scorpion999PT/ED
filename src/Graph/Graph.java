@@ -44,13 +44,17 @@ public class Graph<T> {
         return nodes;
     }
     
-    public void addPath(Node<T> nodeA,Node<T> nodeB,double distance){
+    public void addPath(T keyA,T keyB,double distance){
+        addPath(findNode(keyA), findNode(keyB), distance);
+    }
+    
+    public void addPath(Node nodeA,Node nodeB,double distance){
         nodeA.addNeighbour(nodeB, distance);
         nodeB.addNeighbour(nodeA, distance);
     }
     
     public Iterator getShortPath(T keyA,T keyB){
-        return getShortPath(findNode(keyA), findNode(keyA));
+        return getShortPath(findNode(keyA), findNode(keyB));
     }
     
     public Iterator getShortPath(Node start,Node finish){
@@ -58,11 +62,21 @@ public class Graph<T> {
         Iterator<Node<T>> finishNodes = calculateShortestPathFromSource(start);
         
         while (finishNodes.hasNext()) {  
-            Node node = finishNodes.next();
+            Node<T> node = finishNodes.next();
             if(finish == node){
-                return node.getShortestPath().iterator();
+                
+                LinkedList<T> result = new LinkedList<>();
+ 
+                
+                for(Node x : node.getShortestPath()){
+                    result.add((T)x.getKey());
+                }
+                return result.iterator();
             }
         }
+        
+        System.out.println("Teste");
+        
         return null;
     }
     
@@ -75,7 +89,15 @@ public class Graph<T> {
             }
         }
         
+        System.out.println("Node nao encontrado");
+        
         return null;
+    }
+    
+    // Colocar por ordem do mais proximo
+    public Iterator getMoreClose(T key){
+        Iterator<Node> moreClose = calculateShortestPathFromSource(findNode(key));
+        return moreClose;
     }
 
     private Iterator calculateShortestPathFromSource(Node source) {

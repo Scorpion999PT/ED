@@ -58,11 +58,11 @@ public class Main {
 //        }
         graph.remove("B");
         
-        Iterator<Node<String>> lista = graph.getShortPath(nodeA, nodeE);
+        Iterator<String> lista = graph.getShortPath(nodeA, nodeE);
         
         //Imprime o resultado
         while (lista.hasNext()) {
-            System.out.println(lista.next().getKey());
+            System.out.println(lista.next());
         }
         
     }

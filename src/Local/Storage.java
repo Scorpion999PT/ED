@@ -3,12 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package rumoaorecurso;
+package Local;
+
+import Enum.TypeLocal;
 
 /**
  *
  * @author renat
  */
-public class Clients {
+public class Storage extends Local{
+    
+    public Storage(String name) {
+        super(name);
+    }
     
 }
