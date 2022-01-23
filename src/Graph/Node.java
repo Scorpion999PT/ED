@@ -51,6 +51,10 @@ public class Node<T> {
     public LinkedList<Node<T>> getShortestPath() {
         return shortestPath;
     }
+    
+    public void addShortestPath(Node node){
+        shortestPath.add(node);
+    }
 
     public void setShortestPath(LinkedList<Node<T>> shortestPath) {
         this.shortestPath = shortestPath;
@@ -69,5 +73,9 @@ public class Node<T> {
                 
             }
         }
+    }
+    
+    public void clearShortestPath(){
+        shortestPath = new LinkedList<Node<T>>();
     }
 }

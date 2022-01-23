@@ -20,38 +20,41 @@ import java.util.PriorityQueue;
  * @author renat
  */
 public class Sellers {
-    
+
     // Mercados a visitar pelos vendedores
-    private Market[] ownedMarkets; 
-    
+    private Market[] ownedMarkets;
+
     private double maxWeight;
+    private double currentStorage;
     private String id;
-    
-    private Iterator<Local> currentRoot;
+
+    private LinkedList<Local> currentRoot;
 
     private Local posicaoAtual;
-    
-    public Sellers(Market[] ownedMarkets,String id, double maxWeight, Local enterprise) {
+
+    private LinkedList<Local> mercadorPorVisitar = new LinkedList<>();
+
+    public Sellers(Market[] ownedMarkets, String id, double maxWeight, Local enterprise) {
         this.ownedMarkets = ownedMarkets;
         this.maxWeight = maxWeight;
         this.id = id;
-        
+
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
     }
-    
+
     public Sellers(String id, double maxWeight, Local enterprise) {
         this.maxWeight = maxWeight;
         this.id = id;
-        
+
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
     }
-    
-    public String getId(){
+
+    public String getId() {
         return id;
     }
-    
+
     public Market[] getOwnedMarkets() {
         return ownedMarkets;
     }
@@ -63,39 +66,81 @@ public class Sellers {
     public void setMaxWeight(double maxWeight) {
         this.maxWeight = maxWeight;
     }
-    
-    public Iterator getCurrentRoot(){
-        return currentRoot;
+
+    public Iterator getCurrentRoot() {
+        return currentRoot.iterator();
+    }
+
+    public void walkAllPath(Graph<Local> map) {
+
+        currentRoot = new LinkedList<>();
+        
+        for (Market mercado : ownedMarkets) {
+            //Se a mercadoria acabar ou acabar o que o mercado está a precisar
+            if(currentStorage < mercado.getStorageNeed()){
+                addCurrentRoot(goToStorage(map));
+                currentStorage = ((Storage)currentRoot.getLast()).retirarArmazem(maxWeight);
+            }
+            
+            addCurrentRoot(goToPosition(mercado, map));
+        }
     }
     
-    public void updateCurrentRoot(Graph<Local> map){
-        
-        LinkedList<Local> mercadorPorVisitar = new LinkedList<>();
-        for (Market mercado:ownedMarkets) {
-            mercadorPorVisitar.add((Local)mercado);
+    // Adicionar iterator a current root
+    private void addCurrentRoot(Iterator<Local> it){
+
+        while (it.hasNext()) {
+            currentRoot.add(it.next());
         }
-        
-        Local destino = mercadorPorVisitar.poll();
-        currentRoot = map.getShortPath(posicaoAtual, destino);
+    }
+    
+    // Retorna caminho
+    public Iterator goToPosition(Local destino, Graph map) {
+
+        Iterator it = map.getShortPath(posicaoAtual, destino);
         
         posicaoAtual = destino;
+        
+        return it;
     }
     
-    private Local findStorage(Graph<Local> map){
+    // retorna o caminho usado
+    private Iterator goToStorage(Graph<Local> map){
         
+        Node<Local> node = findStorage(map);
+        
+        posicaoAtual =  node.getKey();
+        
+        return node.getShortestPath().iterator();
+        
+        
+    }
+
+    // Retorna o storage mais proximo
+    private Node<Local> findStorage(Graph<Local> map) {
+
         // Procurar o mercado mais proximo
         Iterator<Node<Local>> nodes = map.getMoreClose(posicaoAtual);
         
+        double distance = Double.MAX_VALUE;
+        
+        Node node = null;
+
         while (nodes.hasNext()) {
             Node<Local> next = nodes.next();
-            if(next.getKey().getType() == TypeLocal.Armazem){
-                return next.getKey();
+            if (next.getKey().getType() == TypeLocal.Armazem) {
+                
+                if(distance < next.getDistance()){
+                    
+                    distance = next.getDistance();
+                    
+                    node = next;
+                }
             }
-            
+
         }
-        
-        return null;
+
+        return node;
     }
-    
-    
+
 }

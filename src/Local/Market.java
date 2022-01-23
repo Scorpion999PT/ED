@@ -15,13 +15,18 @@ import Main.Clients;
  */
 public class Market extends Local{
 
-    private LinkedList<Integer> clientsList;
+    private LinkedList<Double> clientsList;
 
     public Market(String name) {
         super(name);
     }
     
-    public void addClient(int valor){
+    public void addClient(double valor){
         clientsList.add(valor);
+    }
+    
+    public double getStorageNeed(){
+        // --- Em obras, mantenha se longe ---
+        return 0;
     }
 }

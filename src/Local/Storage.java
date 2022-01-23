@@ -17,4 +17,11 @@ public class Storage extends Local{
         super(name);
     }
     
+    
+    public double retirarArmazem(double amount){
+        System.out.println("Foi retirado do armazem");
+        return 0;
+    }
+    
+    
 }

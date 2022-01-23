@@ -59,23 +59,21 @@ public class Graph<T> {
     
     public Iterator getShortPath(Node start,Node finish){
         
-        Iterator<Node<T>> finishNodes = calculateShortestPathFromSource(start);
+        Iterator<Node<T>> finishNodes = updateShortestPathFromSource(start);
         
         while (finishNodes.hasNext()) {  
             Node<T> node = finishNodes.next();
             if(finish == node){
                 
                 LinkedList<T> result = new LinkedList<>();
- 
                 
                 for(Node x : node.getShortestPath()){
                     result.add((T)x.getKey());
                 }
+                
                 return result.iterator();
             }
         }
-        
-        System.out.println("Teste");
         
         return null;
     }
@@ -96,11 +94,14 @@ public class Graph<T> {
     
     // Colocar por ordem do mais proximo
     public Iterator getMoreClose(T key){
-        Iterator<Node> moreClose = calculateShortestPathFromSource(findNode(key));
+        Iterator<Node> moreClose = updateShortestPathFromSource(findNode(key));
         return moreClose;
     }
 
-    private Iterator calculateShortestPathFromSource(Node source) {
+    private Iterator updateShortestPathFromSource(Node source) {
+        
+        clearAllShortestPath();
+        
         source.setDistance(0);
 
         LinkedList<Node<T>> settledNodes = new LinkedList<>();
@@ -126,6 +127,8 @@ public class Graph<T> {
                     unsettledNodes.add(adjacentNode);
                 }
             }
+            currentNode.addShortestPath(currentNode);
+            
             settledNodes.add(currentNode);
         }
         
@@ -155,6 +158,12 @@ public class Graph<T> {
             shortestPath.add(sourceNode);
             evaluationNode.setShortestPath(shortestPath);
             
+        }
+    }
+    
+    private void clearAllShortestPath(){
+        for(Node node:nodes){
+                node.clearShortestPath();
         }
     }
 }

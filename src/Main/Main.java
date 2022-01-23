@@ -9,6 +9,7 @@ import Graph.Graph;
 import Local.Local;
 import Local.Market;
 import Local.Storage;
+
 import java.util.Iterator;
 
 /**
@@ -65,20 +66,26 @@ public class Main {
 
         Market[] ownedMarkets3 = {mercado4, mercado5};
         enterprise.addSellers(ownedMarkets3, "3", 20);
-        
-        
+
         // Map
         Graph<Local> map = enterprise.getMap();
-        
-        enterprise.getSeller("1").updateCurrentRoot(map);
-        
-        Iterator<Local> it = enterprise.getSeller("1").getCurrentRoot();
-        
-        while (it.hasNext()) {
-            System.out.println(it.next().getName());
-            
+
+//        System.out.println("Ir para o primeiro mercado");
+//        enterprise.getSeller("1").walkAllPath(map);
+//
+//        Iterator<Local> it = enterprise.getSeller("1").getCurrentRoot();
+//
+//        while (it.hasNext()) {
+//            System.out.println(it.next().getName());
+//        }
+
+
+        enterprise.getSeller("1").walkAllPath(map);
+
+        Iterator<Local> it2 = enterprise.getSeller("1").getCurrentRoot();
+
+        while (it2.hasNext()) {
+            System.out.println(it2.next().getName());
         }
-
     }
-
 }
