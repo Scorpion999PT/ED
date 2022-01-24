@@ -75,7 +75,8 @@ public class Node<T> {
         }
     }
     
-    public void clearShortestPath(){
+    public void resetNode(){
         shortestPath = new LinkedList<Node<T>>();
+        distance = Double.MAX_VALUE;
     }
 }

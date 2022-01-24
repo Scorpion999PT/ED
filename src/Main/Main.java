@@ -32,6 +32,14 @@ public class Main {
         Market mercado4 = new Market("Mercado 4");
         Market mercado5 = new Market("Mercado 5");
 
+        double[] valores1 = {30,60,100};
+
+        mercado1.addClients(valores1);
+
+        double[] valores2 = {100,40,70};
+
+        mercado2.addClients(valores2);
+
         enterprise.addMarket(mercado1);
         enterprise.addMarket(mercado2);
         enterprise.addMarket(mercado3);
@@ -39,10 +47,14 @@ public class Main {
         enterprise.addMarket(mercado5);
 
         // Adicionar Armazem
-        enterprise.addStorage(new Storage("Armazem 1"));
-        enterprise.addStorage(new Storage("Armazem 2"));
-        enterprise.addStorage(new Storage("Armazem 3"));
-        enterprise.addStorage(new Storage("Armazem 4"));
+        enterprise.addStorage(new Storage("Armazem 1", 500));
+        enterprise.addStorage(new Storage("Armazem 2", 500));
+        enterprise.addStorage(new Storage("Armazem 3", 500));
+        enterprise.addStorage(new Storage("Armazem 4", 500));
+
+        for (Storage storage : enterprise.getStorages()) {
+            storage.addMerchandise(300);
+        }
 
         // Adicionar caminhos
         enterprise.addPath("Empresa", "Mercado 1", 2);
@@ -59,13 +71,13 @@ public class Main {
 
         // Adicionar Sellers
         Market[] ownedMarkets1 = {mercado1, mercado2};
-        enterprise.addSellers(ownedMarkets1, "1", 10);
+        enterprise.addSellers(ownedMarkets1, "1", 200);
 
         Market[] ownedMarkets2 = {mercado2, mercado3};
-        enterprise.addSellers(ownedMarkets2, "2", 15);
+        enterprise.addSellers(ownedMarkets2, "2", 200);
 
         Market[] ownedMarkets3 = {mercado4, mercado5};
-        enterprise.addSellers(ownedMarkets3, "3", 20);
+        enterprise.addSellers(ownedMarkets3, "3", 200);
 
         // Map
         Graph<Local> map = enterprise.getMap();
@@ -78,8 +90,6 @@ public class Main {
 //        while (it.hasNext()) {
 //            System.out.println(it.next().getName());
 //        }
-
-
         enterprise.getSeller("1").walkAllPath(map);
 
         Iterator<Local> it2 = enterprise.getSeller("1").getCurrentRoot();

@@ -100,7 +100,7 @@ public class Graph<T> {
 
     private Iterator updateShortestPathFromSource(Node source) {
         
-        clearAllShortestPath();
+        resetNodes();
         
         source.setDistance(0);
 
@@ -161,9 +161,10 @@ public class Graph<T> {
         }
     }
     
-    private void clearAllShortestPath(){
+    // Reseta o shortestPath e a distancia
+    private void resetNodes(){
         for(Node node:nodes){
-                node.clearShortestPath();
+                node.resetNode();
         }
     }
 }

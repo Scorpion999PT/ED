@@ -21,23 +21,23 @@ public class Teste {
      */
     public static void main(String[] args) {
 
-        Market market = new Market("Mercado");
-        Storage storage = new Storage("Strorage");
-
-        Graph<Local> map = new Graph<>();
-
-        map.addNode(market);
-        map.addNode(storage);
-
-        map.addPath(market, storage, 10);
-
-        Iterator<Local> it = map.getShortPath(market, storage);
-
-        while (it.hasNext()) {
-            Local next = it.next();
-            System.out.println(next.getName());
-
-        }
+//        Market market = new Market("Mercado");
+//        // Storage storage = new Storage("Strorage");
+//
+//        Graph<Local> map = new Graph<>();
+//
+//        map.addNode(market);
+//        map.addNode(storage);
+//
+//        map.addPath(market, storage, 10);
+//
+//        Iterator<Local> it = map.getShortPath(market, storage);
+//
+//        while (it.hasNext()) {
+//            Local next = it.next();
+//            System.out.println(next.getName());
+//
+//        }
 
     }
 

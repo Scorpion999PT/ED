@@ -35,6 +35,10 @@ public class Enterprise {
         map.addNode(enterprise);
     }
 
+    public LinkedList<Storage> getStorages(){
+        return storage;
+    }
+    
     public void addSellers(Market[] ownedMarkets,String id,double maxWeight) {
         
         sellers.add(new Sellers(ownedMarkets,id, maxWeight, enterprise));   

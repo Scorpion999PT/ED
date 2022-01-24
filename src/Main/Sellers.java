@@ -25,6 +25,7 @@ public class Sellers {
     private Market[] ownedMarkets;
 
     private double maxWeight;
+    // Mercadoria disponivel
     private double currentStorage;
     private String id;
 
@@ -74,46 +75,53 @@ public class Sellers {
     public void walkAllPath(Graph<Local> map) {
 
         currentRoot = new LinkedList<>();
-        
-        for (Market mercado : ownedMarkets) {
-            //Se a mercadoria acabar ou acabar o que o mercado está a precisar
-            if(currentStorage < mercado.getStorageNeed()){
-                addCurrentRoot(goToStorage(map));
-                currentStorage = ((Storage)currentRoot.getLast()).retirarArmazem(maxWeight);
+
+        for (int i = 0; i < ownedMarkets.length; i++) {
+
+            //Se nao tiver mercadoria suficiente para 1 cliente
+            // if (currentStorage < ownedMarkets[i].getStorageNeed()) {
+            if(currentStorage == 0){
+                goToStorage(map);
+                // Abastecer
+                currentStorage = ((Storage)posicaoAtual).retirarArmazem(maxWeight);
+
+                i--;
+                continue;
             }
-            
-            addCurrentRoot(goToPosition(mercado, map));
+
+            goToPosition(ownedMarkets[i], map);
+            currentStorage = ((Market)posicaoAtual).giveMerchandise(currentStorage);
+
+            // Se o market ainda tem clientes a pedir mercadoria
+            if (ownedMarkets[i].haveClients()) {
+                i--;
+            }
         }
     }
-    
+
     // Adicionar iterator a current root
-    private void addCurrentRoot(Iterator<Local> it){
+    private void addCurrentRoot(Iterator<Local> it) {
 
         while (it.hasNext()) {
             currentRoot.add(it.next());
         }
     }
-    
-    // Retorna caminho
-    public Iterator goToPosition(Local destino, Graph map) {
+
+    public void goToPosition(Local destino, Graph map) {
 
         Iterator it = map.getShortPath(posicaoAtual, destino);
-        
+
         posicaoAtual = destino;
-        
-        return it;
+
+        addCurrentRoot(it);
     }
-    
+
     // retorna o caminho usado
-    private Iterator goToStorage(Graph<Local> map){
-        
+    private void goToStorage(Graph<Local> map) {
+
         Node<Local> node = findStorage(map);
-        
-        posicaoAtual =  node.getKey();
-        
-        return node.getShortestPath().iterator();
-        
-        
+
+        goToPosition(node.getKey(), map);
     }
 
     // Retorna o storage mais proximo
@@ -121,25 +129,33 @@ public class Sellers {
 
         // Procurar o mercado mais proximo
         Iterator<Node<Local>> nodes = map.getMoreClose(posicaoAtual);
-        
+
         double distance = Double.MAX_VALUE;
-        
-        Node node = null;
+
+        Node<Local> node = null;
 
         while (nodes.hasNext()) {
             Node<Local> next = nodes.next();
             if (next.getKey().getType() == TypeLocal.Armazem) {
-                
-                if(distance < next.getDistance()){
-                    
-                    distance = next.getDistance();
-                    
-                    node = next;
+
+                Storage storage = (Storage) next.getKey();
+
+                if (!storage.isEmpty()) {
+                    // Adicionar o if nao houver mercadoria no armazem
+                    if (distance > next.getDistance()) {
+
+                        distance = next.getDistance();
+
+                        node = next;
+                    }
                 }
             }
 
         }
 
+        if (node == null) {
+            System.out.println("Nao encontrou nenhum storage disponivel");
+        }
         return node;
     }
 
