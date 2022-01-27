@@ -26,5 +26,4 @@ public class Neighbours {
     public double getDistance(){
         return distance;
     }
-    
 }

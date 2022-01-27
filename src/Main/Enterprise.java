@@ -6,13 +6,14 @@
 package Main;
 
 import Enum.TypeLocal;
+import Exceptions.NotFindException;
 import Local.Local;
 
 import Graph.Graph;
 import Local.Market;
 import Local.Storage;
 import java.util.Iterator;
-import java.util.LinkedList;
+import Structs.LinkedList;
 
 /**
  *
@@ -39,9 +40,14 @@ public class Enterprise {
         return storage;
     }
     
-    public void addSellers(Market[] ownedMarkets,String id,double maxWeight) {
+    public void addSellers(LinkedList<Market> ownedMarkets,String id,double maxWeight) {
         
         sellers.add(new Sellers(ownedMarkets,id, maxWeight, enterprise));   
+    }
+    
+        public void addSellers(String id,double maxWeight) {
+        
+        sellers.add(new Sellers(id, maxWeight, enterprise));   
     }
     
     public Sellers getSeller(String id){
@@ -81,7 +87,7 @@ public class Enterprise {
         return map;
     }
 
-    public void addPath(String nameA, String nameB, int distance) {
+    public void addPath(String nameA, String nameB, int distance) throws NotFindException {
         map.addPath(findByName(nameA),findByName(nameB),distance);
     }
 

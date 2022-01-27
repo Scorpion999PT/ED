@@ -5,12 +5,20 @@
  */
 package Main;
 
+import Exceptions.ElementNotFoundException;
+import Exceptions.EmptyCollectionException;
+import Exceptions.NodesNotConectionException;
+import Exceptions.NotComparableException;
+import Exceptions.NotFindException;
 import Graph.Graph;
 import Local.Local;
 import Local.Market;
 import Local.Storage;
+import Structs.LinkedList;
 
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,74 +31,56 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        Enterprise enterprise = new Enterprise(new Local("Empresa"));
+        LinkedList<Integer> teste = new LinkedList<>();
 
-        // Adicionar Mercado
-        Market mercado1 = new Market("Mercado 1");
-        Market mercado2 = new Market("Mercado 2");
-        Market mercado3 = new Market("Mercado 3");
-        Market mercado4 = new Market("Mercado 4");
-        Market mercado5 = new Market("Mercado 5");
+        teste.add(0);
+        teste.add(1);
+        teste.add(2);
+        teste.add(3);
+        teste.add(4);
+        teste.add(5);
 
-        double[] valores1 = {30,60,100};
-
-        mercado1.addClients(valores1);
-
-        double[] valores2 = {100,40,70};
-
-        mercado2.addClients(valores2);
-
-        enterprise.addMarket(mercado1);
-        enterprise.addMarket(mercado2);
-        enterprise.addMarket(mercado3);
-        enterprise.addMarket(mercado4);
-        enterprise.addMarket(mercado5);
-
-        // Adicionar Armazem
-        enterprise.addStorage(new Storage("Armazem 1", 500));
-        enterprise.addStorage(new Storage("Armazem 2", 500));
-        enterprise.addStorage(new Storage("Armazem 3", 500));
-        enterprise.addStorage(new Storage("Armazem 4", 500));
-
-        for (Storage storage : enterprise.getStorages()) {
-            storage.addMerchandise(300);
+        try {
+            teste.remove(0);
+            teste.remove(1);
+            teste.remove(3);
+        } catch (EmptyCollectionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ElementNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        // Adicionar caminhos
-        enterprise.addPath("Empresa", "Mercado 1", 2);
-        enterprise.addPath("Empresa", "Armazem 1", 4);
-        enterprise.addPath("Armazem 1", "Mercado 4", 3);
-        enterprise.addPath("Mercado 4", "Armazem 2", 7);
-        enterprise.addPath("Mercado 1", "Mercado 2", 3);
-        enterprise.addPath("Mercado 1", "Mercado 3", 3);
-        enterprise.addPath("Mercado 3", "Armazem 3", 6);
-        enterprise.addPath("Mercado 3", "Armazem 2", 4);
-        enterprise.addPath("Mercado 5", "Mercado 2", 1);
-        enterprise.addPath("Mercado 5", "Armazem 3", 2);
-        enterprise.addPath("Mercado 5", "Armazem 4", 5);
+        Iterator<Integer> it = teste.iterator();
+        while (it.hasNext()) {
+            System.out.println(it.next());
 
-        // Adicionar Sellers
-        Market[] ownedMarkets1 = {mercado1, mercado2};
-        enterprise.addSellers(ownedMarkets1, "1", 200);
+        }
 
-        Market[] ownedMarkets2 = {mercado2, mercado3};
-        enterprise.addSellers(ownedMarkets2, "2", 200);
-
-        Market[] ownedMarkets3 = {mercado4, mercado5};
-        enterprise.addSellers(ownedMarkets3, "3", 200);
-
-        // Map
+//        for (Integer x:teste) {
+//            System.out.println(x);
+//            
+//        }
+//        System.out.println(teste.size());
+        Enterprise enterprise = new Enterprise(new Local("Empresa"));
         Graph<Local> map = enterprise.getMap();
 
-//        System.out.println("Ir para o primeiro mercado");
-//        enterprise.getSeller("1").walkAllPath(map);
-//
-//        Iterator<Local> it = enterprise.getSeller("1").getCurrentRoot();
-//
-//        while (it.hasNext()) {
-//            System.out.println(it.next().getName());
-//        }
-        enterprise.getSeller("1").walkAllPath(map);
+        Generate.gerarManualmente(enterprise);
+
+        // Generate.gerarAutomaticamente(enterprise);
+        // Map
+        try {
+            enterprise.getSeller("1").walkAllPath(map);
+        } catch (NotFindException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NodesNotConectionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotComparableException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ElementNotFoundException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (EmptyCollectionException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
         Iterator<Local> it2 = enterprise.getSeller("1").getCurrentRoot();
 

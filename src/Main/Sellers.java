@@ -6,14 +6,19 @@
 package Main;
 
 import Enum.TypeLocal;
+import Exceptions.ElementNotFoundException;
+import Exceptions.EmptyCollectionException;
+import Exceptions.NodesNotConectionException;
+import Exceptions.NotComparableException;
+import Exceptions.NotFindException;
 import Graph.Graph;
 import Graph.Node;
 import Local.Local;
 import Local.Market;
 import Local.Storage;
+import Structs.ArrayOrderedList;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.PriorityQueue;
+import Structs.LinkedList;
 
 /**
  *
@@ -22,7 +27,7 @@ import java.util.PriorityQueue;
 public class Sellers {
 
     // Mercados a visitar pelos vendedores
-    private Market[] ownedMarkets;
+    private LinkedList<Market> ownedMarkets = new LinkedList<Market>();
 
     private double maxWeight;
     // Mercadoria disponivel
@@ -32,16 +37,18 @@ public class Sellers {
     private LinkedList<Local> currentRoot;
 
     private Local posicaoAtual;
+    private Local enterprise;
 
     private LinkedList<Local> mercadorPorVisitar = new LinkedList<>();
 
-    public Sellers(Market[] ownedMarkets, String id, double maxWeight, Local enterprise) {
+    public Sellers(LinkedList<Market> ownedMarkets, String id, double maxWeight, Local enterprise) {
         this.ownedMarkets = ownedMarkets;
         this.maxWeight = maxWeight;
         this.id = id;
 
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
+        this.enterprise = enterprise;
     }
 
     public Sellers(String id, double maxWeight, Local enterprise) {
@@ -50,20 +57,25 @@ public class Sellers {
 
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
+        this.enterprise = enterprise;
     }
 
     public String getId() {
         return id;
     }
 
-    public Market[] getOwnedMarkets() {
+    public LinkedList<Market> getOwnedMarkets() {
         return ownedMarkets;
     }
 
-    public void setOwnedMarkets(Market[] ownedMarkets) {
+    public void setOwnedMarkets(LinkedList<Market> ownedMarkets) {
         this.ownedMarkets = ownedMarkets;
     }
 
+    public void addOwnedMarkets(Market market){
+        ownedMarkets.add(market);
+    }
+    
     public void setMaxWeight(double maxWeight) {
         this.maxWeight = maxWeight;
     }
@@ -72,31 +84,32 @@ public class Sellers {
         return currentRoot.iterator();
     }
 
-    public void walkAllPath(Graph<Local> map) {
+    public void walkAllPath(Graph<Local> map) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException {
 
         currentRoot = new LinkedList<>();
 
-        for (int i = 0; i < ownedMarkets.length; i++) {
+        for (int i = 0; i < ownedMarkets.size(); i++) {
 
             //Se nao tiver mercadoria suficiente para 1 cliente
-            // if (currentStorage < ownedMarkets[i].getStorageNeed()) {
-            if(currentStorage == 0){
+            if (currentStorage == 0) {
                 goToStorage(map);
                 // Abastecer
-                currentStorage = ((Storage)posicaoAtual).retirarArmazem(maxWeight);
+                currentStorage = ((Storage) posicaoAtual).retirarArmazem(maxWeight);
 
                 i--;
                 continue;
             }
 
-            goToPosition(ownedMarkets[i], map);
-            currentStorage = ((Market)posicaoAtual).giveMerchandise(currentStorage);
+            goToPosition(ownedMarkets.get(i), map);
+            currentStorage = ((Market) posicaoAtual).giveMerchandise(currentStorage);
 
             // Se o market ainda tem clientes a pedir mercadoria
-            if (ownedMarkets[i].haveClients()) {
+            if (ownedMarkets.get(i).haveClients()) {
                 i--;
             }
         }
+        
+        goToPosition(enterprise, map);
     }
 
     // Adicionar iterator a current root
@@ -107,7 +120,7 @@ public class Sellers {
         }
     }
 
-    public void goToPosition(Local destino, Graph map) {
+    public void goToPosition(Local destino, Graph map) throws NotFindException, NodesNotConectionException, EmptyCollectionException, ElementNotFoundException {
 
         Iterator it = map.getShortPath(posicaoAtual, destino);
 
@@ -117,7 +130,7 @@ public class Sellers {
     }
 
     // retorna o caminho usado
-    private void goToStorage(Graph<Local> map) {
+    private void goToStorage(Graph<Local> map) throws NotFindException, NodesNotConectionException, NotComparableException, EmptyCollectionException, ElementNotFoundException {
 
         Node<Local> node = findStorage(map);
 
@@ -125,29 +138,28 @@ public class Sellers {
     }
 
     // Retorna o storage mais proximo
-    private Node<Local> findStorage(Graph<Local> map) {
+    private Node<Local> findStorage(Graph<Local> map) throws NotFindException, NotComparableException, EmptyCollectionException, ElementNotFoundException {
 
         // Procurar o mercado mais proximo
-        Iterator<Node<Local>> nodes = map.getMoreClose(posicaoAtual);
-
-        double distance = Double.MAX_VALUE;
+        ArrayOrderedList<Node> nodes = map.getMoreClose(posicaoAtual);
 
         Node<Local> node = null;
 
-        while (nodes.hasNext()) {
-            Node<Local> next = nodes.next();
-            if (next.getKey().getType() == TypeLocal.Armazem) {
+        Node<Local> x;
 
-                Storage storage = (Storage) next.getKey();
+        for (int i = 0; i < nodes.size(); i++) {
+
+            x = nodes.get(i);
+
+            if ((x.getKey()).getType() == TypeLocal.Armazem) {
+
+                Storage storage = (Storage) x.getKey();
 
                 if (!storage.isEmpty()) {
-                    // Adicionar o if nao houver mercadoria no armazem
-                    if (distance > next.getDistance()) {
 
-                        distance = next.getDistance();
+                    node = x;
+                    break;
 
-                        node = next;
-                    }
                 }
             }
 

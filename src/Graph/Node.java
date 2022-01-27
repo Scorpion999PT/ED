@@ -5,8 +5,10 @@
  */
 package Graph;
 
-import java.util.LinkedList;
-import java.util.List;
+import Exceptions.ElementNotFoundException;
+import Exceptions.EmptyCollectionException;
+import Exceptions.NotFindException;
+import Structs.LinkedList;
 
 import java.util.Iterator;
 
@@ -14,7 +16,7 @@ import java.util.Iterator;
  *
  * @author renat
  */
-public class Node<T> {
+public class Node<T> implements Comparable<Node>{
 
     private T object;
 
@@ -60,7 +62,7 @@ public class Node<T> {
         this.shortestPath = shortestPath;
     }
 
-    public void removeNeighbour(Node node) {
+    public void removeNeighbour(Node node) throws NotFindException, EmptyCollectionException, ElementNotFoundException {
         
         Iterator<Neighbours> neighbour = getNeighbour();
         
@@ -78,5 +80,18 @@ public class Node<T> {
     public void resetNode(){
         shortestPath = new LinkedList<Node<T>>();
         distance = Double.MAX_VALUE;
+    }
+
+    @Override
+    public int compareTo(Node node) {
+        if(this.distance > node.getDistance()){
+            return -1;
+        }
+        else if(this.distance < node.getDistance()){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 }
