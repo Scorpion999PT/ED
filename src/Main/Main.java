@@ -31,61 +31,33 @@ public class Main {
      */
     public static void main(String[] args) {
 
-        LinkedList<Integer> teste = new LinkedList<>();
-
-        teste.add(0);
-        teste.add(1);
-        teste.add(2);
-        teste.add(3);
-        teste.add(4);
-        teste.add(5);
+        Enterprise enterprise = new Enterprise();
 
         try {
-            teste.remove(0);
-            teste.remove(1);
-            teste.remove(3);
-        } catch (EmptyCollectionException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ElementNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        Iterator<Integer> it = teste.iterator();
-        while (it.hasNext()) {
-            System.out.println(it.next());
-
-        }
-
-//        for (Integer x:teste) {
-//            System.out.println(x);
-//            
-//        }
-//        System.out.println(teste.size());
-        Enterprise enterprise = new Enterprise(new Local("Empresa"));
-        Graph<Local> map = enterprise.getMap();
-
-        Generate.gerarManualmente(enterprise);
-
-        // Generate.gerarAutomaticamente(enterprise);
-        // Map
-        try {
-            enterprise.getSeller("1").walkAllPath(map);
+            Generate.gerarManualmente(enterprise);
+            // Generate.gerarAutomaticamente(enterprise);
         } catch (NotFindException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NodesNotConectionException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotComparableException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ElementNotFoundException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EmptyCollectionException ex) {
+        }
+
+        try {
+            enterprise.fazerPercurso(1);
+        } catch (NotFindException | NodesNotConectionException | NotComparableException | ElementNotFoundException | EmptyCollectionException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        Iterator<Local> it2 = enterprise.getSeller("1").getCurrentRoot();
-
-        while (it2.hasNext()) {
-            System.out.println(it2.next().getName());
+        Iterator<Local> it2;
+        
+        try {
+            
+            it2 = enterprise.getSeller(1).getCurrentRoot();
+            while (it2.hasNext()) {
+                System.out.println(it2.next().getName());
+            }
+            
+        } catch (NotFindException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 }

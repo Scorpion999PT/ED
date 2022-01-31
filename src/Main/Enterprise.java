@@ -6,6 +6,10 @@
 package Main;
 
 import Enum.TypeLocal;
+import Exceptions.ElementNotFoundException;
+import Exceptions.EmptyCollectionException;
+import Exceptions.NodesNotConectionException;
+import Exceptions.NotComparableException;
 import Exceptions.NotFindException;
 import Local.Local;
 
@@ -29,40 +33,50 @@ public class Enterprise {
 
     private Graph<Local> map = new Graph<>();
 
-    public Enterprise(Local enterprise) {
+    public Enterprise() {
+
+    }
+
+    public void setEnterprise(Local enterprise) {
 
         enterprise.setType(TypeLocal.Sede);
         this.enterprise = enterprise;
         map.addNode(enterprise);
     }
 
-    public LinkedList<Storage> getStorages(){
+    public LinkedList<Storage> getStorages() {
         return storage;
     }
-    
-    public void addSellers(LinkedList<Market> ownedMarkets,String id,double maxWeight) {
-        
-        sellers.add(new Sellers(ownedMarkets,id, maxWeight, enterprise));   
+
+    public Market getMarket(String name) throws NotFindException {
+
+        for (Market market : markets) {
+            if (market.getName().equals(name)) {
+                return market;
+            }
+        }
+
+        throw new NotFindException();
     }
-    
-        public void addSellers(String id,double maxWeight) {
-        
-        sellers.add(new Sellers(id, maxWeight, enterprise));   
+
+    public void addSellers(Sellers seller) {
+
+        seller.setEnterprise(enterprise);
+        sellers.add(seller);
     }
-    
-    public Sellers getSeller(String id){
+
+    public Sellers getSeller(int id) throws NotFindException {
         return findSeller(id);
     }
-    
-    private Sellers findSeller(String id){
-        for (Sellers seller: sellers) {
-            if(seller.getId().equals(id)){
+
+    private Sellers findSeller(int id) throws NotFindException {
+        for (Sellers seller : sellers) {
+            if (seller.getId() == id) {
                 return seller;
             }
         }
         
-        System.out.println("Nao encontrou o seller");
-        return null;
+        throw new NotFindException();
     }
 
     public void addMarket(Market market) {
@@ -70,16 +84,16 @@ public class Enterprise {
         market.setType(TypeLocal.Mercado);
 
         this.markets.add(market);
-        
+
         map.addNode(market);
     }
 
     public void addStorage(Storage storage) {
 
-        storage.setType(TypeLocal.Armazem);
+        storage.setType(TypeLocal.Armazém);
 
         this.storage.add(storage);
-        
+
         map.addNode(storage);
     }
 
@@ -88,16 +102,17 @@ public class Enterprise {
     }
 
     public void addPath(String nameA, String nameB, int distance) throws NotFindException {
-        map.addPath(findByName(nameA),findByName(nameB),distance);
+        map.addPath(findByName(nameA), findByName(nameB), distance);
     }
 
-    private Local findByName(String name) {
+    private Local findByName(String name) throws NotFindException {
 
-        if(name.equals(enterprise.getName()))
+        if (name.equals(enterprise.getName())) {
             return enterprise;
-        
+        }
+
         for (Local local : markets) {
-            if (local.getName().equals(name)) {                                         
+            if (local.getName().equals(name)) {
                 return local;
             }
         }
@@ -106,9 +121,14 @@ public class Enterprise {
                 return local;
             }
         }
-        System.out.println(name);
-        System.out.println("Nao encontrou o nome");
-        return null;
+        
+        throw new NotFindException();
+
+    }
+    
+    public LinkedList<Local> fazerPercurso(int id) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException{
+        
+        return getSeller(id).walkAllPath(map);
     }
 
 }

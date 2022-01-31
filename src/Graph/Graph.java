@@ -118,7 +118,7 @@ public class Graph<T> {
     public Node findNode(T key) throws NotFindException {
         
         for (Node node : nodes) {
-            if (node.getKey() == key) {
+            if (node.getKey().equals(key)) {
                 return node;
             }
         }
@@ -129,7 +129,7 @@ public class Graph<T> {
     /**
      * Retorna os Nodes por ordem de distancia
      *
-     * @param key Dar o Node de origem
+     * @param key Dar o Node de origem  
      * @return Retorna os Nodes por ordem de distancia
      * @throws NotFindException
      * @throws NotComparableException
@@ -143,6 +143,7 @@ public class Graph<T> {
             arrayOrder.add(it.next());
         }
         return arrayOrder;
+  
     }
 
     /**

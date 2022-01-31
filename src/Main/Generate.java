@@ -7,6 +7,7 @@ package Main;
 
 import Exceptions.ElementNotFoundException;
 import Exceptions.NotFindException;
+import Local.Local;
 import Local.Market;
 import Local.Storage;
 import java.util.logging.Level;
@@ -18,7 +19,10 @@ import java.util.logging.Logger;
  */
 public class Generate {
 
-    public static void gerarManualmente(Enterprise enterprise) {
+    public static void gerarManualmente(Enterprise enterprise) throws NotFindException {
+
+        // Adicionar local empresa
+        enterprise.setEnterprise(new Local("Empresa"));
 
         // Adicionar Mercado
         Market mercado1 = new Market("Mercado 1");
@@ -51,28 +55,24 @@ public class Generate {
             storage.addMerchandise(500);
         }
 
-        try {
-            // Adicionar caminhos
-            enterprise.addPath("Empresa", "Mercado 1", 2);
-            enterprise.addPath("Empresa", "Armazem 1", 4);
-            enterprise.addPath("Armazem 1", "Mercado 4", 3);
-            enterprise.addPath("Mercado 4", "Armazem 2", 7);
-            enterprise.addPath("Mercado 1", "Mercado 2", 3);
-            enterprise.addPath("Mercado 1", "Mercado 3", 3);
-            enterprise.addPath("Mercado 3", "Armazem 3", 6);
-            enterprise.addPath("Mercado 3", "Armazem 2", 4);
-            enterprise.addPath("Mercado 5", "Mercado 2", 1);
-            enterprise.addPath("Mercado 5", "Armazem 3", 2);
-            enterprise.addPath("Mercado 5", "Armazem 4", 5);
-        } catch (NotFindException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        // Adicionar caminhos
+        enterprise.addPath("Empresa", "Mercado 1", 2);
+        enterprise.addPath("Empresa", "Armazem 1", 4);
+        enterprise.addPath("Armazem 1", "Mercado 4", 3);
+        enterprise.addPath("Mercado 4", "Armazem 2", 7);
+        enterprise.addPath("Mercado 1", "Mercado 2", 3);
+        enterprise.addPath("Mercado 1", "Mercado 3", 3);
+        enterprise.addPath("Mercado 3", "Armazem 3", 6);
+        enterprise.addPath("Mercado 3", "Armazem 2", 4);
+        enterprise.addPath("Mercado 5", "Mercado 2", 1);
+        enterprise.addPath("Mercado 5", "Armazem 3", 2);
+        enterprise.addPath("Mercado 5", "Armazem 4", 5);
 
-        // Adicionar Sellers
-        enterprise.addSellers("1", 200);
-        enterprise.getSeller("1").addOwnedMarkets(mercado2);
-        enterprise.getSeller("1").addOwnedMarkets(mercado4);
-        enterprise.getSeller("1").addOwnedMarkets(mercado5);
+        //Adicionar Sellers
+        enterprise.addSellers(new Sellers(1, "Jorge", 200));
+        enterprise.getSeller(1).addOwnedMarkets(mercado2);
+        enterprise.getSeller(1).addOwnedMarkets(mercado4);
+        enterprise.getSeller(1).addOwnedMarkets(mercado5);
     }
 
     public static void gerarAutomaticamente(Enterprise enterprise) throws NotFindException, ElementNotFoundException {
@@ -103,11 +103,10 @@ public class Generate {
         }
 
         // Adicionar Sellers
-        enterprise.addSellers("1", 200);
-        for (int i = 0; i < numMercados; i++) {
-            enterprise.getSeller("1").addOwnedMarkets(mercados[i]);
-        }
-
+//        enterprise.addSellers("1", 200);
+//        for (int i = 0; i < numMercados; i++) {
+//            enterprise.getSeller("1").addOwnedMarkets(mercados[i]);
+//        }
         for (int i = 0; i < numMercados - 1; i++) {
             enterprise.addPath("Mercado " + i, "Mercado " + (i + 1), 5);
         }

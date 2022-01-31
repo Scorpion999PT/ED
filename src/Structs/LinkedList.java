@@ -24,11 +24,6 @@ public class LinkedList<T> implements Iterable<T> {
         
         this();
         
-        
-//        this.first = null;
-//        this.count = 0;
-//        this.last = null;
-//
         for (T t : linkedList) {
 
             final Node<T> l = last;

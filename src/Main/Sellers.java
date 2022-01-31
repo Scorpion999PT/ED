@@ -32,7 +32,8 @@ public class Sellers {
     private double maxWeight;
     // Mercadoria disponivel
     private double currentStorage;
-    private String id;
+    private int id;
+    private String nome;
 
     private LinkedList<Local> currentRoot;
 
@@ -41,26 +42,30 @@ public class Sellers {
 
     private LinkedList<Local> mercadorPorVisitar = new LinkedList<>();
 
-    public Sellers(LinkedList<Market> ownedMarkets, String id, double maxWeight, Local enterprise) {
+    public Sellers(LinkedList<Market> ownedMarkets, int id,String nome ,double maxWeight) {
         this.ownedMarkets = ownedMarkets;
+        this.nome = nome;
+        this.maxWeight = maxWeight;
+        this.id = id;
+    }
+
+    public Sellers(int id,String nome, double maxWeight) {
+        this.nome = nome;
         this.maxWeight = maxWeight;
         this.id = id;
 
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
-        this.enterprise = enterprise;
     }
-
-    public Sellers(String id, double maxWeight, Local enterprise) {
-        this.maxWeight = maxWeight;
-        this.id = id;
-
+    
+    public void setEnterprise(Local enterprise){
+        this.enterprise = enterprise;
+        
         // O Seller começa na empresa o precurso
-        this.posicaoAtual = enterprise;
-        this.enterprise = enterprise;
+        this.posicaoAtual = enterprise;      
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
@@ -84,7 +89,7 @@ public class Sellers {
         return currentRoot.iterator();
     }
 
-    public void walkAllPath(Graph<Local> map) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException {
+    public LinkedList<Local> walkAllPath(Graph<Local> map) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException {
 
         currentRoot = new LinkedList<>();
 
@@ -110,6 +115,8 @@ public class Sellers {
         }
         
         goToPosition(enterprise, map);
+        
+        return currentRoot;
     }
 
     // Adicionar iterator a current root
@@ -151,24 +158,19 @@ public class Sellers {
 
             x = nodes.get(i);
 
-            if ((x.getKey()).getType() == TypeLocal.Armazem) {
+            if ((x.getKey()).getType() == TypeLocal.Armazém) {
 
                 Storage storage = (Storage) x.getKey();
 
                 if (!storage.isEmpty()) {
 
-                    node = x;
-                    break;
-
+                    return x;
                 }
             }
 
         }
 
-        if (node == null) {
-            System.out.println("Nao encontrou nenhum storage disponivel");
-        }
-        return node;
+        throw new NotFindException();
     }
 
 }
