@@ -17,6 +17,10 @@ public class Market extends Local {
 
     private LinkedList<Double> clientsList = new LinkedList<>();
 
+    public LinkedList<Double> getClientsList() {
+        return clientsList;
+    }
+
     public Market(String name) {
         super(name);
     }

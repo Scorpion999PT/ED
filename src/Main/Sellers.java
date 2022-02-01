@@ -27,7 +27,7 @@ import Structs.LinkedList;
 public class Sellers {
 
     // Mercados a visitar pelos vendedores
-    private LinkedList<Market> ownedMarkets = new LinkedList<Market>();
+    private LinkedList<Market> ownedMarkets = new LinkedList<>();
 
     private double maxWeight;
     // Mercadoria disponivel
@@ -35,12 +35,10 @@ public class Sellers {
     private int id;
     private String nome;
 
-    private LinkedList<Local> currentRoot;
+    private LinkedList<Local> currentRoot = null;
 
     private Local posicaoAtual;
     private Local enterprise;
-
-    private LinkedList<Local> mercadorPorVisitar = new LinkedList<>();
 
     public Sellers(LinkedList<Market> ownedMarkets, int id,String nome ,double maxWeight) {
         this.ownedMarkets = ownedMarkets;
@@ -56,6 +54,14 @@ public class Sellers {
 
         // O Seller começa na empresa o precurso
         this.posicaoAtual = enterprise;
+    }
+
+    public double getMaxWeight() {
+        return maxWeight;
+    }
+
+    public String getNome() {
+        return nome;
     }
     
     public void setEnterprise(Local enterprise){
@@ -86,6 +92,11 @@ public class Sellers {
     }
 
     public Iterator getCurrentRoot() {
+        
+        if(currentRoot == null){
+            return null;
+        }
+        
         return currentRoot.iterator();
     }
 
@@ -150,21 +161,19 @@ public class Sellers {
         // Procurar o mercado mais proximo
         ArrayOrderedList<Node> nodes = map.getMoreClose(posicaoAtual);
 
-        Node<Local> node = null;
-
-        Node<Local> x;
+        Node<Local> node;
 
         for (int i = 0; i < nodes.size(); i++) {
 
-            x = nodes.get(i);
+            node = nodes.get(i);
 
-            if ((x.getKey()).getType() == TypeLocal.Armazém) {
+            if ((node.getKey()).getType() == TypeLocal.Armazém) {
 
-                Storage storage = (Storage) x.getKey();
+                Storage storage = (Storage) node.getKey();
 
                 if (!storage.isEmpty()) {
 
-                    return x;
+                    return node;
                 }
             }
 

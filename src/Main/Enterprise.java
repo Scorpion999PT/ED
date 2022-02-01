@@ -37,6 +37,15 @@ public class Enterprise {
 
     }
 
+    public LinkedList<Sellers> getSellers() {
+        return sellers;
+    }
+
+    public LinkedList<Market> getMarkets() {
+        return markets;
+    }
+   
+
     public void setEnterprise(Local enterprise) {
 
         enterprise.setType(TypeLocal.Sede);
@@ -66,16 +75,13 @@ public class Enterprise {
     }
 
     public Sellers getSeller(int id) throws NotFindException {
-        return findSeller(id);
-    }
-
-    private Sellers findSeller(int id) throws NotFindException {
+        
         for (Sellers seller : sellers) {
             if (seller.getId() == id) {
                 return seller;
             }
         }
-        
+
         throw new NotFindException();
     }
 
@@ -121,13 +127,13 @@ public class Enterprise {
                 return local;
             }
         }
-        
+
         throw new NotFindException();
 
     }
-    
-    public LinkedList<Local> fazerPercurso(int id) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException{
-        
+
+    public LinkedList<Local> fazerPercurso(int id) throws NotFindException, NodesNotConectionException, NotComparableException, ElementNotFoundException, EmptyCollectionException {
+
         return getSeller(id).walkAllPath(map);
     }
 

@@ -36,12 +36,8 @@ public class TesteJson {
         Enterprise enterprise = new Enterprise();
 
         try {
-            importar.importar(enterprise);
-        } catch (IOException ex) {
-            Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotFindException ex) {
+            importar.importar(enterprise,"ImportarED");
+        } catch (IOException | ParseException | NotFindException ex) {
             Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
         }
 
@@ -58,15 +54,15 @@ public class TesteJson {
 
             }
 
-        } catch (NotFindException ex) {
+        } catch (NotFindException | NodesNotConectionException | NotComparableException | ElementNotFoundException | EmptyCollectionException ex) {
             Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NodesNotConectionException ex) {
-            Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotComparableException ex) {
-            Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ElementNotFoundException ex) {
-            Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EmptyCollectionException ex) {
+        }
+        
+        Export export = new Export();
+        
+        try {
+            export.exportEnterprise(enterprise, "teste");
+        } catch (IOException | NotFindException | ElementNotFoundException ex) {
             Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
         }
 

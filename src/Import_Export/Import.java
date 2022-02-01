@@ -28,11 +28,11 @@ import org.json.simple.parser.ParseException;
  */
 public class Import {
 
-    public void importar(Enterprise enterprise) throws FileNotFoundException, IOException, ParseException, NotFindException {
+    public void importar(Enterprise enterprise,String nameFile) throws FileNotFoundException, IOException, ParseException, NotFindException {
 
         JSONParser parser = new JSONParser();
 
-        Object obj = parser.parse(new FileReader("file\\ImportarED.json"));
+        Object obj = parser.parse(new FileReader("file\\" + nameFile + ".json"));
 
         JSONObject jsonObject = (JSONObject) obj;
         

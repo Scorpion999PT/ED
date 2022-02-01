@@ -21,6 +21,14 @@ public class Storage extends Local {
         this.merchandiseMax = merchandiseMax;
     }
 
+    public double getMerchandiseAvailable() {
+        return merchandiseAvailable;
+    }
+
+    public double getMerchandiseMax() {
+        return merchandiseMax;
+    }
+
     public double retirarArmazem(double amount) {
 
         if (amount > merchandiseAvailable) {
