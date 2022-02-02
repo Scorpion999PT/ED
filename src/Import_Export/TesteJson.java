@@ -58,10 +58,10 @@ public class TesteJson {
             Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        Export export = new Export();
+        Export export = new Export(enterprise);
         
         try {
-            export.exportEnterprise(enterprise, "teste");
+            export.exportEnterprise("teste");
         } catch (IOException | NotFindException | ElementNotFoundException ex) {
             Logger.getLogger(TesteJson.class.getName()).log(Level.SEVERE, null, ex);
         }
